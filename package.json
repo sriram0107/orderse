@@ -1,0 +1,17 @@
+{
+  "name": "orderse",
+  "version": "1.0.0",
+  "description": "An application to help customers easily order food ",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Sriram Sathish",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "handlebars": "^4.7.6",
+    "mocha": "^8.2.1"
+  }
+}
