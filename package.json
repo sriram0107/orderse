@@ -9,9 +9,12 @@
   "author": "Sriram Sathish",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "handlebars": "^4.7.6",
+    "hbs": "^4.1.1",
     "mocha": "^8.2.1"
   }
 }
