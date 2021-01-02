@@ -11,6 +11,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
@@ -20,6 +21,7 @@
     "ibm-watson": "^6.0.1",
     "mocha": "^8.2.1",
     "node-audiorecorder": "^2.2.0",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.6",
     "voice-speech-recognition": "^1.1.2"
   }

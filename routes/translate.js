@@ -3,29 +3,10 @@ const LanguageTranslatorV3 = require("ibm-watson/language-translator/v3");
 const { watson_translator_config } = require("../watson");
 const { IamAuthenticator } = require("ibm-watson/auth");
 
-const langcode = {
-  Tamil: "ta",
-  English: "en",
-  Spanish: "es",
-  Hindi: "hi",
-  Portuguese: "pt",
-  French: "fr",
-  Afrikaans: "af",
-  Bosnian: "bs",
-  Chinese: "zh",
-  Croatian: "hr",
-  Czech: "cs",
-  Danish: "da",
-  Dutch: "nl",
-  Estonian: "et",
-  German: "de",
-  Hungarian: "hu",
-  Norwegian: "no",
-  Polish: "pl",
-  Russian: "ru",
-  Swedish: "sv",
-};
-router.get("/:from/:to", (req, res) => {
+router.get("/:from/:to/:text", (req, res) => {
+  if (req.params.from === req.params.to) {
+    res.status(200).send(req.params.text);
+  }
   const languageTranslator = new LanguageTranslatorV3({
     version: "2018-05-01",
     authenticator: new IamAuthenticator({
@@ -35,18 +16,37 @@ router.get("/:from/:to", (req, res) => {
   });
 
   const translateParams = {
-    text: req.body.text,
+    text: req.params.text,
     modelId: `${req.params.from}-${req.params.to}`,
   };
 
   languageTranslator
     .translate(translateParams)
     .then((translationResult) => {
-      res.send(translationResult.result.translations[0].translation);
+      res
+        .status(200)
+        .send(translationResult.result.translations[0].translation);
     })
     .catch((err) => {
-      res.send("error:", err);
+      res.status(200).send("error:", err);
     });
 });
 
 module.exports = router;
+
+/*
+todos
+
+Request Workflow
+1. If same language no translation
+2. When salesperson talks 
+    -> Record
+    -> Extract food details if any
+    -> Convert to language of choice
+    -> Display
+3. When customer talks
+   ->Record
+   ->Trnslate
+   ->Extract
+   ->Display
+*/

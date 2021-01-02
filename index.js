@@ -25,3 +25,5 @@ app.use("/menu", menu);
 app.use("/translate", translate);
 
 app.listen(5000, () => console.log("Server running on http://localhost:5000/"));
+
+module.exports = app;
