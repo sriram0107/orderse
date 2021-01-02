@@ -16,12 +16,12 @@ app.use(
   })
 );
 app.use(cors());
-app.use(express.static("views/images"));
+// app.use(express.static("views/images"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.set("view engine", "hbs");
 app.use("/convert", speech_to_text);
 app.use("/menu", menu);
-app.use("/translate/:from/:to", translate);
+app.use("/translate", translate);
 
 app.listen(5000, () => console.log("Server running on http://localhost:5000/"));

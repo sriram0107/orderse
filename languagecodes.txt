@@ -1,0 +1,21 @@
+List of language codes for translation
+
+English - en
+Spanish - es
+Portuguese - pt
+French - fr
+Afrikaans - af 
+Bosnian - bs 
+Chinese - zh 
+Croatian - hr 
+Czech - cs 
+Danish - da 
+Dutch - nl 
+Estonian - et 
+German - de 
+Hungarian - hu 
+Norwegian - no 
+Polish - pl 
+Russian - ru 
+Swedish - sv 
+
