@@ -28,7 +28,7 @@ router.get("/:from/:to/:text", (req, res) => {
         .send(translationResult.result.translations[0].translation);
     })
     .catch((err) => {
-      res.status(200).send("error:", err);
+      res.status(200).send(err);
     });
 });
 
