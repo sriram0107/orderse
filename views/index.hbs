@@ -73,32 +73,37 @@
 
 </p>
 <div class="translated"></div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => { handlerFunction(stream) })
-
 
     function handlerFunction(stream) {
         rec = new MediaRecorder(stream);
         rec.ondataavailable = e => {
             audioChunks.push(e.data);
             if (rec.state == "inactive") {
-                let blob = new Blob(audioChunks, { type: 'audio/flac' }); //for mp3 - mpeg-3
-                recordedAudio.src = URL.createObjectURL(blob);
+                //let blob = new Blob(audioChunks, { type: 'audio/mpeg-3' }); //for mp3 - mpeg-3
+                let file = new File(audioChunks, "audio.flac", { type: 'audio/flac' })
+                const src = URL.createObjectURL(file);
+                recordedAudio.src = src;
+                //recordedAudio.src = URL.createObjectURL(file);
                 recordedAudio.controls = true;
                 recordedAudio.autoplay = true;
-                sendData(blob)
+                sendData(file, src);
             }
         }
     }
-    function sendData(data) {
-        console.log("going to post audio file", URL.createObjectURL(data).substring(5))
-        fetch(`http://localhost:5000/convert`, { method: 'POST', body: URL.createObjectURL(data).substring(5) })
+    function sendData(data, src) {
+        console.log("THIS", data);
+        axios.post("http://localhost:5000/convert", {
+            data: src.substring(5),
+        })
             .then(res => {
                 let area = document.querySelector('.translated');
                 area.textContent = JSON.stringify(res);
             })
-
+            .catch(err => console.log("Error in sending message to API", err))
         //send data to file here
     }
 
