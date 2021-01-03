@@ -83,14 +83,14 @@
         rec.ondataavailable = e => {
             audioChunks.push(e.data);
             if (rec.state == "inactive") {
-                //let blob = new Blob(audioChunks, { type: 'audio/mpeg-3' }); //for mp3 - mpeg-3
-                let file = new File(audioChunks, "audio.flac", { type: 'audio/flac' })
-                const src = URL.createObjectURL(file);
+                let blob = new Blob(audioChunks, { type: 'audio/mpeg-3' }); //for mp3 - mpeg-3
+                //let file = new File(audioChunks, "audio.flac", { type: 'audio/flac' })
+                const src = URL.createObjectURL(blob);
                 recordedAudio.src = src;
                 //recordedAudio.src = URL.createObjectURL(file);
                 recordedAudio.controls = true;
                 recordedAudio.autoplay = true;
-                sendData(file, src);
+                sendData(blob, src);
             }
         }
     }

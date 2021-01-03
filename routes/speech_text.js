@@ -4,7 +4,7 @@ const { IamAuthenticator } = require("ibm-watson/auth");
 const SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
 const { watson_speech_to_text_config } = require("../watson");
 const fetch = require("node-fetch");
-var toBuffer = require("blob-to-buffer");
+var arrayBufferToBuffer = require("arraybuffer-to-buffer");
 
 router.post("/", async function (req, res) {
   const speechToText = new SpeechToTextV1({
@@ -16,21 +16,18 @@ router.post("/", async function (req, res) {
 
   const params = {
     objectMode: true,
-    contentType: "audio/flac",
+    contentType: "audio/mpeg3",
     model: "en-US_BroadbandModel",
   };
   const recognizeStream = speechToText.recognizeUsingWebSocket(params);
-  let file = await fetch(req.body.data)
-    .then((r) => r.blob())
-    .catch((err) => console.log("api :", err));
-  console.log("file -", file);
-  toBuffer(file, function (err, buffer) {
-    if (err) throw err;
-    fs.createReadStream(blob).pipe(recognizeStream);
-  });
-
+  fs.createReadStream("./co.mp3").pipe(recognizeStream);
+  // file
+  //   .arrayBuffer()
+  //   .then((buf) => arrayBufferToBuffer(buf))
+  //   .then((buf) => fs.createReadStream(buf).pipe(recognizeStream))
+  //   .catch((err) => console.log(err));
   recognizeStream.on("data", function (event) {
-    onEvent("Data:", event);
+    onEvent("Data:", event.results[0].alternatives[0].transcript);
   });
   recognizeStream.on("error", function (event) {
     onEvent("Error:", event);
