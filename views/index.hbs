@@ -109,11 +109,24 @@
 <body>
 </body>
 <div class="app">
+    <select>
+        <option>English</option>
+        <option>French</option>
+        <option>Spanish</option>
+        <option>Portuguese</option>
+        <option>German</option>
+    </select>
+    <select>
+        <option>English</option>
+        <option>French</option>
+        <option>Spanish</option>
+        <option>Portuguese</option>
+        <option>German</option>
+    </select>
+
     <select name="" id="micSelect"></select>
 
     <select id="visSelect">
-        <option value="frequencybars">Bar</option>
-        <option value="sinewave">Wave</option>
         <option value="circle">Circle</option>
     </select>
 
@@ -130,6 +143,7 @@
     <div>
         <div class="translated"></div>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/wavefile"></script>
         <script>
             (async () => {
                 let leftchannel = [];
@@ -287,7 +301,7 @@
                     if (!context) setUpRecording();
                 }
 
-                function stop() {
+                async function stop() {
                     console.log('Stop')
                     recording = false;
                     document.querySelector('#msg').style.visibility = 'hidden'
@@ -336,7 +350,6 @@
 
                     // our final binary blob
                     const blob = new Blob([view], { type: 'audio/wav' });
-
                     const audioUrl = URL.createObjectURL(blob); //----------------------------------------------------------------------------------->>>>>
                     console.log('BLOB ', blob);
                     console.log('URL ', audioUrl);
@@ -344,6 +357,17 @@
                     const link = document.querySelector('#download');
                     link.setAttribute('href', audioUrl);
                     link.download = 'output.wav';
+                    let data = await axios.get(audioUrl).then(res => res.data);
+                    wav = new wavefile.WaveFile(data);
+                    //wav.fromBuffer(blob);
+                    //let data = await axios.get(audioUrl).then(res => res);
+                    console.log("Buffer", wav)
+                    let text = await axios.post("http://localhost:5000/convert", {
+                        data: wav,
+                    })
+                        .then(res => JSON.stringify(res))
+                        .catch(err => console.log("api error:", err))
+                    document.querySelector(".translated").textContent = text;
                 }
 
                 // Visualizer function from
@@ -358,85 +382,7 @@
                     let visualSetting = visualSelect.value;
                     console.log(visualSetting);
                     if (!analyser) return;
-
-                    if (visualSetting === "sinewave") {
-                        analyser.fftSize = 2048;
-                        var bufferLength = analyser.fftSize;
-                        console.log(bufferLength);
-                        var dataArray = new Uint8Array(bufferLength);
-
-                        canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
-                        var draw = function () {
-
-                            drawVisual = requestAnimationFrame(draw);
-
-                            analyser.getByteTimeDomainData(dataArray);
-
-                            canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-                            canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-                            canvasCtx.lineWidth = 2;
-                            canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
-
-                            canvasCtx.beginPath();
-
-                            var sliceWidth = WIDTH * 1.0 / bufferLength;
-                            var x = 0;
-
-                            for (var i = 0; i < bufferLength; i++) {
-
-                                var v = dataArray[i] / 128.0;
-                                var y = v * HEIGHT / 2;
-
-                                if (i === 0) {
-                                    canvasCtx.moveTo(x, y);
-                                } else {
-                                    canvasCtx.lineTo(x, y);
-                                }
-
-                                x += sliceWidth;
-                            }
-
-                            canvasCtx.lineTo(canvas.width, canvas.height / 2);
-                            canvasCtx.stroke();
-                        };
-
-                        draw();
-
-                    } else if (visualSetting == "frequencybars") {
-                        analyser.fftSize = 64;
-                        var bufferLengthAlt = analyser.frequencyBinCount;
-                        console.log(bufferLengthAlt);
-                        var dataArrayAlt = new Uint8Array(bufferLengthAlt);
-
-                        canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
-                        var drawAlt = function () {
-                            drawVisual = requestAnimationFrame(drawAlt);
-
-                            analyser.getByteFrequencyData(dataArrayAlt);
-
-                            canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-                            canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-                            var barWidth = (WIDTH / bufferLengthAlt);
-                            var barHeight;
-                            var x = 0;
-
-                            for (var i = 0; i < bufferLengthAlt; i++) {
-                                barHeight = dataArrayAlt[i];
-
-                                canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-                                canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
-
-                                x += barWidth + 1;
-                            }
-                        };
-
-                        drawAlt();
-
-                    } else if (visualSetting == "circle") {
+                    if (visualSetting == "circle") {
                         analyser.fftSize = 32;
                         let bufferLength = analyser.frequencyBinCount;
                         console.log(bufferLength);

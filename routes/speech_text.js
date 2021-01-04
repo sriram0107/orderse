@@ -3,8 +3,6 @@ const fs = require("fs");
 const { IamAuthenticator } = require("ibm-watson/auth");
 const SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
 const { watson_speech_to_text_config } = require("../watson");
-const fetch = require("node-fetch");
-const extractAudio = require("ffmpeg-extract-audio");
 
 router.post("/", async function (req, res) {
   const speechToText = new SpeechToTextV1({
@@ -19,7 +17,8 @@ router.post("/", async function (req, res) {
     model: "en-US_BroadbandModel",
   };
   const recognizeStream = speechToText.recognizeUsingWebSocket(params);
-  fs.createReadStream("./test.wav").pipe(recognizeStream);
+  fs.createReadStream(req.body.data).pipe(recognizeStream);
+
   recognizeStream.on("data", function (event) {
     onEvent("Data:", event);
   });
