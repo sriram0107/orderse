@@ -4,7 +4,7 @@ const { IamAuthenticator } = require("ibm-watson/auth");
 const SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
 const { watson_speech_to_text_config } = require("../watson");
 const fetch = require("node-fetch");
-var arrayBufferToBuffer = require("arraybuffer-to-buffer");
+const extractAudio = require("ffmpeg-extract-audio");
 
 router.post("/", async function (req, res) {
   const speechToText = new SpeechToTextV1({
@@ -13,33 +13,49 @@ router.post("/", async function (req, res) {
     }),
     serviceUrl: watson_speech_to_text_config.url,
   });
-
   const params = {
     objectMode: true,
-    contentType: "audio/mpeg3",
+    contentType: "audio/wav",
     model: "en-US_BroadbandModel",
   };
   const recognizeStream = speechToText.recognizeUsingWebSocket(params);
-  fs.createReadStream("./co.mp3").pipe(recognizeStream);
-  // file
-  //   .arrayBuffer()
-  //   .then((buf) => arrayBufferToBuffer(buf))
-  //   .then((buf) => fs.createReadStream(buf).pipe(recognizeStream))
-  //   .catch((err) => console.log(err));
+  fs.createReadStream("./test.wav").pipe(recognizeStream);
   recognizeStream.on("data", function (event) {
-    onEvent("Data:", event.results[0].alternatives[0].transcript);
+    onEvent("Data:", event);
   });
   recognizeStream.on("error", function (event) {
     onEvent("Error:", event);
-    res.send(event);
   });
   recognizeStream.on("close", function (event) {
     onEvent("Close:", event);
   });
 
+  // Display events on the console.
   function onEvent(name, event) {
     console.log(name, JSON.stringify(event, null, 2));
   }
+
+  // const recognizeStream = speechToText.recognizeUsingWebSocket(params);
+  // fs.createReadStream("./co.wav").pipe(recognizeStream);
+  // // file
+  // //   .arrayBuffer()
+  // //   .then((buf) => arrayBufferToBuffer(buf))
+  // //   .then((buf) => fs.createReadStream(buf).pipe(recognizeStream))
+  // //   .catch((err) => console.log(err));
+  // recognizeStream.on("data", function (event) {
+  //   onEvent("Data:", event.results[0].alternatives[0].transcript);
+  // });
+  // recognizeStream.on("error", function (event) {
+  //   onEvent("Error:", event);
+  //   res.send(event);
+  // });
+  // recognizeStream.on("close", function (event) {
+  //   onEvent("Close:", event);
+  // });
+
+  // function onEvent(name, event) {
+  //   console.log(name, JSON.stringify(event, null, 2));
+  // }
 });
 
 module.exports = router;
