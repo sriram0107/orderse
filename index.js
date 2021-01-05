@@ -6,6 +6,8 @@ const cors = require("cors");
 const speech_to_text = require("./routes/speech_text");
 const menu = require("./routes/menu");
 const translate = require("./routes/translate");
+var multer = require("multer");
+var upload = multer();
 var bodyParser = require("body-parser");
 
 app.use(express.json({ limit: "25mb" }));
@@ -19,6 +21,7 @@ app.use(
   })
 );
 app.use(cors());
+app.use(upload.array("avatar"));
 // app.use(express.static("views/images"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -30,9 +33,7 @@ app.use("/translate", translate);
 app.get("/", (req, res) => {
   res.render("index");
 });
-app.get("/:blobid", (req, res) => {
-  res.send(req.params.blobid);
-});
+
 app.listen(5000, () => console.log("Server running on http://localhost:5000/"));
 
 module.exports = app;

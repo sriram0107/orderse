@@ -347,9 +347,9 @@
                         view.setInt16(index, interleaved[i] * (0x7FFF * volume), true);
                         index += 2;
                     }
-
                     // our final binary blob
                     const blob = new Blob([view], { type: 'audio/wav' });
+                    //const blob = new Blob([view], "audio.wav", { type: 'audio/wav' });
                     const audioUrl = URL.createObjectURL(blob); //----------------------------------------------------------------------------------->>>>>
                     console.log('BLOB ', blob);
                     console.log('URL ', audioUrl);
@@ -357,13 +357,16 @@
                     const link = document.querySelector('#download');
                     link.setAttribute('href', audioUrl);
                     link.download = 'output.wav';
-                    let data = await axios.get(audioUrl).then(res => res.data);
-                    wav = new wavefile.WaveFile(data);
+
+                    //wav = new wavefile.WaveFile(file);
                     //wav.fromBuffer(blob);
-                    //let data = await axios.get(audioUrl).then(res => res);
-                    console.log("Buffer", wav)
-                    let text = await axios.post("http://localhost:5000/convert", {
-                        data: wav,
+                    //console.log("Buffer", wav)
+                    var formData = new FormData();
+                    //enctype="multipart/form-data"
+                    formData.append('avatar', blob);
+                    let text = await fetch("http://localhost:5000/convert", {
+                        method: 'POST',
+                        body: formData,
                     })
                         .then(res => JSON.stringify(res))
                         .catch(err => console.log("api error:", err))
