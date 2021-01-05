@@ -1,0 +1,98 @@
+#record {
+  background-color: red;
+  /* Green */
+  border-width: medium;
+  border-color: black;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  max-width: 50%;
+  max-height: 15%;
+  border-radius: 50%;
+  left: 100px;
+  right: 100px;
+  position: relative;
+}
+
+#stopRecord {
+  background-color: green;
+  /* Green */
+  border-width: medium;
+  border-color: black;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  max-width: 50%;
+  max-height: 15%;
+  border-radius: 50%;
+  left: 100px;
+  right: 100px;
+  position: relative;
+}
+
+h2 {
+  left: 100px;
+  position: relative;
+}
+
+#recordedAudio {
+  left: 100px;
+  right: 100px;
+  position: relative;
+}
+
+#msg {
+  visibility: hidden;
+  color: red;
+  font-weight: bold;
+  font-size: 22px;
+  font-family: Verdana;
+}
+
+button {
+  padding: 5px 10px;
+  border: 1px solid grey;
+  font-size: 18px;
+  background: white;
+}
+
+.audio-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  justify-content: center;
+}
+
+.audio-controls button {
+  margin: 0px 5px;
+}
+
+canvas {
+  margin-top: 10px;
+  background-color: black;
+}
+
+select {
+  height: 25px;
+  margin: 0px 5px;
+}
+
+a {
+  margin-left: 20px;
+}
+
+.app {
+  text-align: center;
+  padding-top: 20px;
+}
