@@ -7,9 +7,9 @@ const speech_to_text = require("./routes/speech_text");
 const menu = require("./routes/menu");
 const translate = require("./routes/translate");
 const createSession = require("./routes/createSession");
-var multer = require("multer");
-var upload = multer();
-var bodyParser = require("body-parser");
+const multer = require("multer");
+const upload = multer();
+const bodyParser = require("body-parser");
 
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb" }));

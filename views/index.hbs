@@ -9,35 +9,55 @@
 <body>
 </body>
 <div class="app">
-    <select>
-        <option>English</option>
-        <option>French</option>
-        <option>Spanish</option>
-        <option>Portuguese</option>
-        <option>German</option>
-    </select>
-    <select>
-        <option>English</option>
-        <option>French</option>
-        <option>Spanish</option>
-        <option>Portuguese</option>
-        <option>German</option>
-    </select>
-
-    <select name="" id="micSelect"></select>
-
+    <div class="langselect">
+        <select class="lang">
+            <option value="" disabled selected>Staff</option>
+            <option value="English">English</option>
+            <option value="Arabic">العربية</option>
+            <option value="Spanish">Español</option>
+            <option value="French">français</option>
+            <option value="Portuguese">Português</option>
+            <option value="German">Deutsche</option>
+            <option value="Chinese">中文</option>
+            <option value="Dutch">Dutch</option>
+            <option value="Italian">Italiano</option>
+        </select>
+        <select class="lang">
+            <option value="" disabled selected>Customer</option>
+            <option value="English">English</option>
+            <option value="Arabic">العربية</option>
+            <option value="Spanish">Español</option>
+            <option value="French">français</option>
+            <option value="Portuguese">Português</option>
+            <option value="German">Deutsche</option>
+            <option value="Chinese">中文</option>
+            <option value="Dutch">Dutch</option>
+            <option value="Italian">Italiano</option>
+        </select>
+        <select name="" id="micSelect"></select>
+        <button class="createsession">Create Session</button>
+        <button class="endsession">End Session</button>
+    </div>
     <select id="visSelect">
         <option value="circle">Circle</option>
     </select>
     <div class="translated"></div>
-
-
-    <div class="audio-controls">
-        <button id="record">Record</button>
-        <button id="stop">Stop</button><br /><br />
-        <audio id="audio" controls></audio>
+    <div class="controls">
+        <div class="staff_audio_control">
+            <div class="audio-controls">
+                <button id="record">Record</button>
+                <button id="stop">Stop</button><br /><br />
+                <audio id="audio" controls></audio>
+            </div>
+        </div>
+        <div class="customer_audio_control">
+            <div class="audio-controls">
+                <button id="record">Record</button>
+                <button id="stop">Stop</button><br /><br />
+                <audio id="audio" controls></audio>
+            </div>
+        </div>
     </div>
-
     <div id="msg">Recording...</div>
     <canvas width="500" height="300"></canvas>
     <div>

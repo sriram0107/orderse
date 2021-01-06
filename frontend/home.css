@@ -1,3 +1,9 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
 #record {
   background-color: red;
   /* Green */
@@ -94,5 +100,63 @@ a {
 
 .app {
   text-align: center;
-  padding-top: 20px;
+}
+
+.langselect {
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(67, 73, 75, 0.938);
+  margin-top: 0px;
+}
+
+.createsession {
+  border: none;
+  background-color: rgb(32, 179, 93);
+  height: 70%;
+  border-radius: 5px;
+  margin: 10px;
+}
+.endsession {
+  border: none;
+  background-color: rgb(218, 104, 89);
+  height: 70%;
+  border-radius: 5px;
+  margin: 10px;
+}
+.lang {
+  width: 20vw;
+  font-size: large;
+}
+
+#visSelect {
+  display: none;
+}
+
+.translated {
+  width: 100vw;
+  height: 70vh;
+  background-color: rosybrown;
+}
+
+.controls {
+  width: 100vw;
+  height: 20vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.staff_audio_control {
+  height: 100%;
+  width: 50%;
+  background-color: aqua;
+}
+
+.customer_audio_control {
+  height: 100%;
+  width: 50%;
+  background-color: gray;
 }

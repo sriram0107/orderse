@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const fs = require("fs");
 const fsp = require("fs-promise");
 const { IamAuthenticator } = require("ibm-watson/auth");
 const SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
 const { watson_speech_to_text_config } = require("../watson");
+const { langModels } = require("../languageModels");
 
 const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({

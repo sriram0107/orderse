@@ -310,4 +310,12 @@
   document.querySelector("#stop").onclick = (e) => {
     stop();
   };
+  document.querySelector("#record").onclick = (e) => {
+    console.log("Start recording");
+    start();
+  };
+
+  document.querySelector("#stop").onclick = (e) => {
+    stop();
+  };
 })();
