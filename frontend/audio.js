@@ -11,11 +11,12 @@
   let context = null;
   let analyser = null;
   let canvas = document.querySelector("canvas");
-  let canvasCtx = canvas.getContext("2d");
-  let visualSelect = document.querySelector("#visSelect");
   let micSelect = document.querySelector("#micSelect");
   let stream = null;
   let tested = false;
+  var audioControls = document.querySelectorAll(".audio-controls");
+  document.querySelector("#msg_cust").style.visible = "visibility";
+  document.querySelector("#msg_staff").style.visible = "visibility";
 
   try {
     window.stream = stream = await getStream();
@@ -104,7 +105,6 @@
       rightchannel.push(new Float32Array(right));
       recordingLength += bufferSize;
     };
-    visualize();
   }
 
   function mergeBuffers(channelBuffer, recordingLength) {
@@ -140,9 +140,11 @@
     }
   }
 
-  function start() {
+  function start(person) {
     recording = true;
-    document.querySelector("#msg").style.visibility = "visible";
+    person === "cust"
+      ? (document.querySelector("#msg_cust").style.visibility = "visible")
+      : (document.querySelector("#msg_staff").style.visibility = "visible");
     // reset the buffers for the new recording
     leftchannel.length = rightchannel.length = 0;
     recordingLength = 0;
@@ -150,11 +152,12 @@
     if (!context) setUpRecording();
   }
 
-  async function stop() {
+  async function stop(person, lang) {
     console.log("Stop");
     recording = false;
-    document.querySelector("#msg").style.visibility = "hidden";
-
+    person === "cust"
+      ? (document.querySelector("#msg_cust").style.visibility = "hidden")
+      : (document.querySelector("#msg_staff").style.visibility = "hidden");
     // we flat the left and right channels down
     let leftBuffer = mergeBuffers(leftchannel, recordingLength);
     let rightBuffer = mergeBuffers(rightchannel, recordingLength);
@@ -195,24 +198,15 @@
       view.setInt16(index, interleaved[i] * (0x7fff * volume), true);
       index += 2;
     }
-    // our final binary blob
     const blob = new Blob([view], { type: "audio/wav" });
-    //const blob = new Blob([view], "audio.wav", { type: 'audio/wav' });
-    const audioUrl = URL.createObjectURL(blob); //----------------------------------------------------------------------------------->>>>>
-    console.log("BLOB ", blob);
-    console.log("URL ", audioUrl);
-    document.querySelector("#audio").setAttribute("src", audioUrl);
-    const link = document.querySelector("#download");
-    link.setAttribute("href", audioUrl);
-    link.download = "output.wav";
-
-    //wav = new wavefile.WaveFile(file);
-    //wav.fromBuffer(blob);
-    //console.log("Buffer", wav)
     var formData = new FormData();
-    //enctype="multipart/form-data"
     formData.append("avatar", blob);
-    fetch("http://localhost:5000/convert", {
+    var convert =
+      person === "cust"
+        ? document.querySelector("#l1").value
+        : document.querySelector("#l2").value;
+    console.log("params -->", lang, convert);
+    fetch(`http://localhost:5000/convert/${lang}/${convert}/${person}`, {
       method: "POST",
       body: formData,
     })
@@ -226,56 +220,6 @@
             "Our servers are down")
       );
   }
-
-  // Visualizer function from
-  // https://webaudiodemos.appspot.com/AudioRecorder/index.html
-  //
-  function visualize() {
-    WIDTH = canvas.width;
-    HEIGHT = canvas.height;
-    CENTERX = canvas.width / 2;
-    CENTERY = canvas.height / 2;
-
-    let visualSetting = visualSelect.value;
-    console.log(visualSetting);
-    if (!analyser) return;
-    if (visualSetting == "circle") {
-      analyser.fftSize = 32;
-      let bufferLength = analyser.frequencyBinCount;
-      console.log(bufferLength);
-      let dataArray = new Uint8Array(bufferLength);
-
-      canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
-      let draw = () => {
-        drawVisual = requestAnimationFrame(draw);
-
-        analyser.getByteFrequencyData(dataArray);
-        canvasCtx.fillStyle = "rgb(0, 0, 0)";
-        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-        // let radius = dataArray.reduce((a,b) => a + b) / bufferLength;
-        let radius = dataArray[2] / 2;
-        if (radius < 20) radius = 20;
-        if (radius > 100) radius = 100;
-        // console.log('Radius ', radius)
-        canvasCtx.beginPath();
-        canvasCtx.arc(CENTERX, CENTERY, radius, 0, 2 * Math.PI, false);
-        // canvasCtx.fillStyle = 'rgb(50,50,' + (radius+100) +')';
-        // canvasCtx.fill();
-        canvasCtx.lineWidth = 6;
-        canvasCtx.strokeStyle = "rgb(50,50," + (radius + 100) + ")";
-        canvasCtx.stroke();
-      };
-      draw();
-    }
-  }
-
-  visualSelect.onchange = function () {
-    window.cancelAnimationFrame(drawVisual);
-    visualize();
-  };
-
   micSelect.onchange = async (e) => {
     console.log("now use device ", micSelect.value);
     stream.getTracks().forEach(function (track) {
@@ -302,20 +246,39 @@
     context.resume();
   }
 
-  document.querySelector("#record").onclick = (e) => {
+  document.querySelector("#record_cust").onclick = (e) => {
     console.log("Start recording");
-    start();
+    document.querySelector("#record_staff").disabled = true;
+    start("cust");
   };
 
-  document.querySelector("#stop").onclick = (e) => {
-    stop();
+  document.querySelector("#stop_cust").onclick = (e) => {
+    var lang = document.querySelector("#l2").value;
+    stop("cust", lang);
+    document.querySelector("#record_staff").disabled = false;
   };
-  document.querySelector("#record").onclick = (e) => {
+  document.querySelector("#record_staff").onclick = (e) => {
     console.log("Start recording");
-    start();
+    document.querySelector("#record_cust").disabled = true;
+    start("staff");
   };
 
-  document.querySelector("#stop").onclick = (e) => {
-    stop();
+  document.querySelector("#stop_staff").onclick = (e) => {
+    var lang = document.querySelector("#l1").value;
+    stop("staff", lang);
+    document.querySelector("#record_cust").disabled = false;
+  };
+
+  document.querySelector(".createsession").onclick = (e) => {
+    audioControls[0].style.visibility = "visible";
+    audioControls[1].style.visibility = "visible";
+    document.querySelector(".endsession").disabled = false;
+    document.querySelector(".createsession").disabled = true;
+  };
+  document.querySelector(".endsession").onclick = (e) => {
+    document.querySelector(".endsession").disabled = true;
+    document.querySelector(".createsession").disabled = false;
+    audioControls[0].style.visibility = "hidden";
+    audioControls[1].style.visibility = "hidden";
   };
 })();
