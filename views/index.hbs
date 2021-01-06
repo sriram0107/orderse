@@ -10,7 +10,7 @@
 </body>
 <div class="app">
     <div class="langselect">
-        <select class="lang">
+        <select class="lang" id="l1">
             <option value="" disabled selected>Staff</option>
             <option value="English">English</option>
             <option value="Arabic">العربية</option>
@@ -22,7 +22,7 @@
             <option value="Dutch">Dutch</option>
             <option value="Italian">Italiano</option>
         </select>
-        <select class="lang">
+        <select class="lang" id="l2">
             <option value="" disabled selected>Customer</option>
             <option value="English">English</option>
             <option value="Arabic">العربية</option>
@@ -36,7 +36,7 @@
         </select>
         <select name="" id="micSelect"></select>
         <button class="createsession">Create Session</button>
-        <button class="endsession">End Session</button>
+        <button class="endsession" disabled>End Session</button>
     </div>
     <select id="visSelect">
         <option value="circle">Circle</option>
@@ -45,21 +45,19 @@
     <div class="controls">
         <div class="staff_audio_control">
             <div class="audio-controls">
-                <button id="record">Record</button>
-                <button id="stop">Stop</button><br /><br />
-                <audio id="audio" controls></audio>
+                <button id="record_staff">Record</button>
+                <button id="stop_staff">Stop</button>
+                <div id="msg_staff">Recording Staff...</div>
             </div>
         </div>
         <div class="customer_audio_control">
             <div class="audio-controls">
-                <button id="record">Record</button>
-                <button id="stop">Stop</button><br /><br />
-                <audio id="audio" controls></audio>
+                <button id="record_cust">Record</button>
+                <button id="stop_cust">Stop</button>
+                <div id="msg_cust">Recording Cust...</div>
             </div>
         </div>
     </div>
-    <div id="msg">Recording...</div>
-    <canvas width="500" height="300"></canvas>
     <div>
         <script src="audio.js"></script>
 

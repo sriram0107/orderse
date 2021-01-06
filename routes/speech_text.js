@@ -12,9 +12,16 @@ const speechToText = new SpeechToTextV1({
   serviceUrl: watson_speech_to_text_config.url,
 });
 
-router.post("/", async function (req, res) {
+router.post("/:lang/:to/:by", async function (req, res) {
+  /*
+    req.params.lang - Language received from the audio file
+    req.params.to - Language to be converted to
+    req.params.by - Can be either staff or cust 
+  */
+
+  console.log("converting from", req.params.lang, "to", req.params.to);
   const buffer = req.files[0].buffer; //Extract audio file as a hexadecimal buffer
-  const translationModel = "en-US_BroadbandModel";
+  const translationModel = langModels[req.params.lang];
   const params = {
     objectMode: true,
     contentType: "audio/wav",
@@ -48,3 +55,19 @@ router.post("/", async function (req, res) {
 });
 
 module.exports = router;
+
+/*
+todos
+Request Workflow
+1. If same language no translation
+2. When salesperson talks 
+    -> Record
+    -> Extract food details if any
+    -> Convert to language of choice
+    -> Display
+3. When customer talks
+   ->Record
+   ->Trnslate
+   ->Extract
+   ->Display
+*/

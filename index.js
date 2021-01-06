@@ -6,7 +6,6 @@ const cors = require("cors");
 const speech_to_text = require("./routes/speech_text");
 const menu = require("./routes/menu");
 const translate = require("./routes/translate");
-const createSession = require("./routes/createSession");
 const multer = require("multer");
 const upload = multer();
 const bodyParser = require("body-parser");
@@ -30,7 +29,6 @@ app.set("view engine", "hbs");
 app.use("/convert", speech_to_text);
 app.use("/menu", menu);
 app.use("/translate", translate);
-app.use("/session", createSession);
 
 app.get("/", (req, res) => {
   res.render("index");

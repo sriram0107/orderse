@@ -36,7 +36,6 @@ module.exports = router;
 
 /*
 todos
-
 Request Workflow
 1. If same language no translation
 2. When salesperson talks 
