@@ -2,8 +2,11 @@ const router = require("express").Router();
 const fsp = require("fs-promise");
 const { IamAuthenticator } = require("ibm-watson/auth");
 const SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
-const { watson_speech_to_text_config } = require("../watson");
-const { langModels } = require("../languageModels");
+const { watson_speech_to_text_config } = require("../config/watson");
+const { langModels } = require("../config/languageModels");
+const fetch = require("node-fetch");
+require("dotenv").config();
+const BASE_URL = process.env.BASE_URL;
 
 const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({
@@ -38,10 +41,6 @@ router.post("/:lang/:to/:by", async function (req, res) {
   recognizeStream.on("close", (event) => {
     onEvent("Close:", event);
   });
-  const onEvent = (name, event) => {
-    textData = event.results ? event.results[0].alternatives[0].transcript : "";
-    console.log(textData);
-  };
 
   try {
     const file = await fsp.open("./uploads/audio.wav", "w");
@@ -51,6 +50,30 @@ router.post("/:lang/:to/:by", async function (req, res) {
   } catch (err) {
     console.log("Error with reading the audio file", err);
   }
+  const onEvent = (name, event) => {
+    textData = event.results ? event.results[0].alternatives[0].transcript : "";
+    console.log(textData);
+    req.params.by === "cust" ? handleCustomer(textData) : handleSales(textData);
+  };
+
+  const handleCustomer = (txt) => {s
+    try {
+      const translatedText = await fetch(BASE_URL + `/translate/${lang}/${to}/${textData}`)
+      const result = await fetch(BASE_URL + `/menu/${translatedText}`)
+      res.status(200).send(result)
+    }
+    catch (err) {
+
+  console.log("Error in translation", err);
+  }
+    
+  };
+  const handleSales = (txt) => {
+    const result = await fetch(BASE_URL + `/menu/${translatedText}`)
+    const translatedBody = await fetch(BASE_URL + `/items/${lang}/${to}/${textData}`) //handle diff.
+    res.status(200).send(translatedBody)
+  };
+
   res.send(textData);
 });
 
@@ -71,3 +94,4 @@ Request Workflow
    ->Extract
    ->Display
 */
+
