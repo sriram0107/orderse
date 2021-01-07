@@ -50,28 +50,30 @@ router.post("/:lang/:to/:by", async function (req, res) {
   } catch (err) {
     console.log("Error with reading the audio file", err);
   }
-  const onEvent = (name, event) => {
+  const onEvent = async (name, event) => {
     textData = event.results ? event.results[0].alternatives[0].transcript : "";
     console.log(textData);
     req.params.by === "cust" ? handleCustomer(textData) : handleSales(textData);
   };
 
-  const handleCustomer = (txt) => {s
+  const handleCustomer = async (txt) => {
+    s;
     try {
-      const translatedText = await fetch(BASE_URL + `/translate/${lang}/${to}/${textData}`)
-      const result = await fetch(BASE_URL + `/menu/${translatedText}`)
-      res.status(200).send(result)
+      const translatedText = await fetch(
+        BASE_URL + `/translate/${lang}/${to}/${textData}`
+      );
+      const result = await fetch(BASE_URL + `/menu/${translatedText}`);
+      res.status(200).send(result);
+    } catch (err) {
+      console.log("Error in translation", err);
     }
-    catch (err) {
-
-  console.log("Error in translation", err);
-  }
-    
   };
-  const handleSales = (txt) => {
-    const result = await fetch(BASE_URL + `/menu/${translatedText}`)
-    const translatedBody = await fetch(BASE_URL + `/items/${lang}/${to}/${textData}`) //handle diff.
-    res.status(200).send(translatedBody)
+  const handleSales = async (txt) => {
+    const result = await fetch(BASE_URL + `/menu/${translatedText}`);
+    const translatedBody = await fetch(
+      BASE_URL + `/items/${lang}/${to}/${textData}`
+    ); //handle diff.
+    res.status(200).send(translatedBody);
   };
 
   res.send(textData);
@@ -94,4 +96,3 @@ Request Workflow
    ->Extract
    ->Display
 */
-

@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const LanguageTranslatorV3 = require("ibm-watson/language-translator/v3");
-const { watson_translator_config } = require("../watson");
+const { watson_translator_config } = require("../config/watson");
 const { IamAuthenticator } = require("ibm-watson/auth");
 const languageTranslator = new LanguageTranslatorV3({
   version: "2018-05-01",

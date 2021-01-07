@@ -1,18 +1,18 @@
 const router = require("express").Router();
-const { dishes } = require("../config/dishes");
+const { dishes, dishesId } = require("../config/dishes");
 
 router.get("/:convo", (req, res) => {
-  //extract menu items from req.params.convo
-  const words = req.params.convo.split(" "); // separates the words for parsing dishes;
-  res.send(getDishes(words));
+  var ordered = [];
+  for (const dish in dishesId) {
+    if (req.params.convo.toLowerCase().includes(dish.toLowerCase())) {
+      ordered.push(dishes[dishesId[dish]]);
+    }
+  }
+  res.status(200).json({
+    text: req.params.convo,
+    dishes: ordered,
+  });
 });
 
-const getDishes = (txt) => {
-  var result = [];
-  return {
-    text: txt,
-    dishes: result,
-  };
-};
 // router.post("/", (req, res) => {});
 module.exports = router;
