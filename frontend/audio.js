@@ -213,7 +213,31 @@
       .then((res) => res.json())
       .then((res) => {
         console.log("returned datatatata", res);
-        document.querySelector(".translated").textContent = JSON.stringify(res);
+        const data = JSON.stringify(res);
+        var textArea = document.querySelector(".translated");
+        textArea.innerHTML = "";
+        var text = document.createElement("p");
+        text.className = "convo";
+        text.textContent = res.text;
+        textArea.appendChild(text);
+        var dishes = document.createElement("div");
+        dishes.className = "card-container";
+        res.dishes.forEach((dish) => {
+          var dishCard = document.createElement("div");
+          dishCard.className = "card";
+          var image = document.createElement("img");
+          image.className = "card-img";
+          image.src = dish.picture;
+          var dishName = document.createElement("h4");
+          dishName.textContent = dish.name;
+          var cost = document.createElement("i");
+          cost.textContent = dish.cost;
+          dishCard.appendChild(image);
+          dishCard.appendChild(dishName);
+          dishCard.appendChild(cost);
+          dishes.appendChild(dishCard);
+        });
+        textArea.appendChild(dishes);
       })
       .catch(
         (err) =>
@@ -278,6 +302,8 @@
     document.querySelector(".createsession").disabled = true;
   };
   document.querySelector(".endsession").onclick = (e) => {
+    var textArea = document.querySelector(".translated");
+    textArea.innerHTML = "";
     document.querySelector(".endsession").disabled = true;
     document.querySelector(".createsession").disabled = false;
     audioControls[0].style.visibility = "hidden";
