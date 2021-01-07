@@ -12,7 +12,7 @@ const languageTranslator = new LanguageTranslatorV3({
 
 router.get("/:from/:to/:text", (req, res) => {
   if (req.params.from === req.params.to) {
-    res.status(200).send(req.params.text);
+    res.status(200).json({ text: req.params.text });
   }
   const translateParams = {
     text: req.params.text,
@@ -24,10 +24,10 @@ router.get("/:from/:to/:text", (req, res) => {
     .then((translationResult) => {
       res
         .status(200)
-        .send(translationResult.result.translations[0].translation);
+        .json({ text: translationResult.result.translations[0].translation });
     })
     .catch((err) => {
-      res.status(200).send(err);
+      console.log("translation err", err);
     });
 });
 

@@ -210,14 +210,16 @@
       method: "POST",
       body: formData,
     })
+      .then((res) => res.json())
       .then((res) => {
-        console.log("returned datatatata", res.body);
-        document.querySelector(".translated").textContent = res;
+        console.log("returned datatatata", res);
+        document.querySelector(".translated").textContent = JSON.stringify(res);
       })
       .catch(
         (err) =>
-          (document.querySelector(".translated").textContent =
-            "Our servers are down")
+          (document.querySelector(".translated").textContent = JSON.stringify(
+            err
+          ))
       );
   }
   micSelect.onchange = async (e) => {
