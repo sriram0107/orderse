@@ -5,6 +5,7 @@ const SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
 const { watson_speech_to_text_config } = require("../config/watson");
 const { langModels } = require("../config/languageModels");
 const fetch = require("node-fetch");
+const { langcode } = require("../config/languages");
 require("dotenv").config();
 const BASE_URL = process.env.BASE_URL;
 
@@ -36,10 +37,10 @@ router.post("/:lang/:to/:by", async function (req, res) {
     onEvent("Data:", event);
   });
   recognizeStream.on("error", (event) => {
-    onEvent("Error:", event);
+    console.log("speech to text model error", event);
   });
   recognizeStream.on("close", (event) => {
-    onEvent("Close:", event);
+    console.log("speech to text model closed");
   });
 
   try {
@@ -51,32 +52,59 @@ router.post("/:lang/:to/:by", async function (req, res) {
     console.log("Error with reading the audio file", err);
   }
   const onEvent = async (name, event) => {
-    textData = event.results ? event.results[0].alternatives[0].transcript : "";
+    textData =
+      typeof event.results[0].alternatives[0].transcript != "undefined"
+        ? event.results[0].alternatives[0].transcript
+        : "";
     console.log(textData);
     req.params.by === "cust" ? handleCustomer(textData) : handleSales(textData);
   };
 
   const handleCustomer = async (txt) => {
-    s;
     try {
-      const translatedText = await fetch(
-        BASE_URL + `/translate/${lang}/${to}/${textData}`
+      const translatedTextData = await fetch(
+        BASE_URL +
+          `/translate/${langcode[req.params.lang]}/${
+            langcode[req.params.to]
+          }/${txt}`,
+        { method: "GET" }
       );
-      const result = await fetch(BASE_URL + `/menu/${translatedText}`);
-      res.status(200).send(result);
+      const translatedText = await translatedTextData.json();
+      console.log("here", translatedText);
+      const resultData = await fetch(
+        BASE_URL + `/menu/${translatedText.text}`,
+        {
+          method: "GET",
+        }
+      );
+      const result = await resultData.json();
+      res.status(200).json(result);
     } catch (err) {
-      console.log("Error in translation", err);
+      console.log("Error in translation handlecust", err);
     }
   };
   const handleSales = async (txt) => {
-    const result = await fetch(BASE_URL + `/menu/${translatedText}`);
-    const translatedBody = await fetch(
-      BASE_URL + `/items/${lang}/${to}/${textData}`
-    ); //handle diff.
-    res.status(200).send(translatedBody);
+    try {
+      const resultdata = await fetch(BASE_URL + `/menu/${txt}`, {
+        method: "GET",
+      });
+      const result = await resultdata.json();
+      const translatedTextData = await fetch(
+        BASE_URL +
+          `/translate/${langcode[req.params.lang]}/${
+            langcode[req.params.to]
+          }/${txt}`,
+        { method: "GET" }
+      ); //handle diff.
+      const translatedText = await translatedTextData.json();
+      result.text = translatedText.text;
+      res.status(200).json(result);
+    } catch (err) {
+      console.log("Error in translation handlesales", err);
+    }
   };
 
-  res.send(textData);
+  //res.send(textData);
 });
 
 module.exports = router;

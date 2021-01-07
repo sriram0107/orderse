@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { dishes, dishesId } = require("../config/dishes");
-
+// avoid duplication
 router.get("/:convo", (req, res) => {
   var ordered = [];
   for (const dish in dishesId) {
