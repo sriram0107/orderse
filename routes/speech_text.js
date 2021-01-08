@@ -22,8 +22,6 @@ router.post("/:lang/:to/:by", async function (req, res) {
     req.params.to - Language to be converted to
     req.params.by - Can be either staff or cust 
   */
-
-  console.log("converting from", req.params.lang, "to", req.params.to);
   const buffer = req.files[0].buffer; //Extract audio file as a hexadecimal buffer
   const translationModel = langModels[req.params.lang];
   const params = {
@@ -57,7 +55,6 @@ router.post("/:lang/:to/:by", async function (req, res) {
         typeof event.results[0].alternatives[0].transcript != "undefined"
           ? event.results[0].alternatives[0].transcript
           : "";
-      console.log(textData);
       req.params.by === "cust"
         ? handleCustomer(textData)
         : handleSales(textData);
@@ -84,7 +81,6 @@ router.post("/:lang/:to/:by", async function (req, res) {
         }
       );
       const translatedText = await translatedTextData.json();
-      console.log("here", translatedText);
       const resultData = await fetch(BASE_URL + `/menu`, {
         method: "POST",
         headers: {

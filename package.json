@@ -10,8 +10,6 @@
   "author": "Sriram Sathish",
   "license": "ISC",
   "dependencies": {
-    "arraybuffer-to-buffer": "0.0.7",
-    "blob-to-buffer": "^1.2.9",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
@@ -19,8 +17,6 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "ffmpeg": "0.0.4",
-    "ffmpeg-extract-audio": "^1.0.2",
     "fs": "0.0.1-security",
     "fs-promise": "^2.0.3",
     "handlebars": "^4.7.6",
@@ -28,10 +24,8 @@
     "ibm-watson": "^6.0.1",
     "mocha": "^8.2.1",
     "multer": "^1.4.2",
-    "node-audiorecorder": "^2.2.0",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.6",
-    "voice-speech-recognition": "^1.1.2",
-    "wavefile": "^11.0.0"
+    "voice-speech-recognition": "^1.1.2"
   }
 }
