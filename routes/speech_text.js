@@ -95,7 +95,7 @@ router.post("/:lang/:to/:by", async function (req, res) {
             langcode[req.params.to]
           }/${txt}`,
         { method: "GET" }
-      ); //handle diff.
+      );
       const translatedText = await translatedTextData.json();
       result.text = translatedText.text;
       res.status(200).json(result);
@@ -103,24 +103,6 @@ router.post("/:lang/:to/:by", async function (req, res) {
       console.log("Error in translation handlesales", err);
     }
   };
-
-  //res.send(textData);
 });
 
 module.exports = router;
-
-/*
-todos
-Request Workflow
-1. If same language no translation
-2. When salesperson talks 
-    -> Record
-    -> Extract food details if any
-    -> Convert to language of choice
-    -> Display
-3. When customer talks
-   ->Record
-   ->Trnslate
-   ->Extract
-   ->Display
-*/

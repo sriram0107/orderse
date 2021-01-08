@@ -206,15 +206,18 @@
         ? document.querySelector("#l1").value
         : document.querySelector("#l2").value;
     console.log("params -->", lang, convert);
+    var textArea = document.querySelector(".translated");
+    textArea.innerHTML = "";
+    var loading = document.createElement("img");
+    loading.className = "loading-icon";
+    loading.src = "load.gif";
+    textArea.appendChild(loading);
     fetch(`http://localhost:5000/convert/${lang}/${convert}/${person}`, {
       method: "POST",
       body: formData,
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log("returned datatatata", res);
-        const data = JSON.stringify(res);
-        var textArea = document.querySelector(".translated");
         textArea.innerHTML = "";
         var text = document.createElement("p");
         text.className = "convo";
@@ -228,7 +231,7 @@
           var image = document.createElement("img");
           image.className = "card-img";
           image.src = dish.picture;
-          var dishName = document.createElement("h4");
+          var dishName = document.createElement("p");
           dishName.textContent = dish.name;
           var cost = document.createElement("i");
           cost.textContent = dish.cost;
@@ -296,10 +299,16 @@
   };
 
   document.querySelector(".createsession").onclick = (e) => {
-    audioControls[0].style.visibility = "visible";
-    audioControls[1].style.visibility = "visible";
-    document.querySelector(".endsession").disabled = false;
-    document.querySelector(".createsession").disabled = true;
+    var lang1 = document.querySelector("#l1").value;
+    var lang2 = document.querySelector("#l2").value;
+    if (lang1 !== "" && lang2 !== "") {
+      audioControls[0].style.visibility = "visible";
+      audioControls[1].style.visibility = "visible";
+      document.querySelector(".endsession").disabled = false;
+      document.querySelector(".createsession").disabled = true;
+    } else {
+      alert("Please select the languages before starting the session");
+    }
   };
   document.querySelector(".endsession").onclick = (e) => {
     var textArea = document.querySelector(".translated");
