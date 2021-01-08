@@ -52,12 +52,20 @@ router.post("/:lang/:to/:by", async function (req, res) {
     console.log("Error with reading the audio file", err);
   }
   const onEvent = async (name, event) => {
-    textData =
-      typeof event.results[0].alternatives[0].transcript != "undefined"
-        ? event.results[0].alternatives[0].transcript
-        : "";
-    console.log(textData);
-    req.params.by === "cust" ? handleCustomer(textData) : handleSales(textData);
+    try {
+      textData =
+        typeof event.results[0].alternatives[0].transcript != "undefined"
+          ? event.results[0].alternatives[0].transcript
+          : "";
+      console.log(textData);
+      req.params.by === "cust"
+        ? handleCustomer(textData)
+        : handleSales(textData);
+    } catch (err) {
+      res
+        .status(400)
+        .json({ text: "Could not recognize your voice", dishes: [] });
+    }
   };
 
   const handleCustomer = async (txt) => {

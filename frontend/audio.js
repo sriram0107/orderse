@@ -222,6 +222,9 @@
         var text = document.createElement("p");
         text.className = "convo";
         text.textContent = res.text;
+        if (res.text === "Could not recognize your voice") {
+          text.style.color = "red";
+        }
         textArea.appendChild(text);
         var dishes = document.createElement("div");
         dishes.className = "card-container";
@@ -277,25 +280,34 @@
 
   document.querySelector("#record_cust").onclick = (e) => {
     console.log("Start recording");
-    document.querySelector("#record_staff").disabled = true;
+    audioControls[0].style.visibility = "hidden";
+    document.querySelector("#record_cust").style.display = "none";
+    document.querySelector("#stop_cust").style.display = "inline";
     start("cust");
   };
 
   document.querySelector("#stop_cust").onclick = (e) => {
     var lang = document.querySelector("#l2").value;
     stop("cust", lang);
-    document.querySelector("#record_staff").disabled = false;
+    audioControls[0].style.visibility = "visible";
+    document.querySelector("#stop_cust").style.display = "none";
+    document.querySelector("#record_cust").style.display = "inline";
   };
+
   document.querySelector("#record_staff").onclick = (e) => {
     console.log("Start recording");
-    document.querySelector("#record_cust").disabled = true;
+    audioControls[1].style.visibility = "hidden";
+    document.querySelector("#record_staff").style.display = "none";
+    document.querySelector("#stop_staff").style.display = "inline";
     start("staff");
   };
 
   document.querySelector("#stop_staff").onclick = (e) => {
     var lang = document.querySelector("#l1").value;
     stop("staff", lang);
-    document.querySelector("#record_cust").disabled = false;
+    audioControls[1].style.visibility = "visible";
+    document.querySelector("#stop_staff").style.display = "none";
+    document.querySelector("#record_staff").style.display = "inline";
   };
 
   document.querySelector(".createsession").onclick = (e) => {
@@ -304,6 +316,8 @@
     if (lang1 !== "" && lang2 !== "") {
       audioControls[0].style.visibility = "visible";
       audioControls[1].style.visibility = "visible";
+      document.querySelector("#record_staff").style.display = "inline";
+      document.querySelector("#record_cust").style.display = "inline";
       document.querySelector(".endsession").disabled = false;
       document.querySelector(".createsession").disabled = true;
     } else {

@@ -247,10 +247,12 @@ a {
 
 #msg_staff {
   visibility: hidden;
+  color: rgb(209, 66, 66);
 }
 
 #msg_cust {
   visibility: hidden;
+  color: rgb(209, 66, 66);
 }
 
 .card-container {
@@ -302,4 +304,20 @@ a {
 .loading-icon {
   height: 25%;
   width: 10%;
+}
+
+#record_staff,
+#stop_staff,
+#record_cust,
+#stop_cust {
+  height: 40%;
+  width: 15%;
+  cursor: pointer;
+  display: none;
+}
+
+.audio_controls {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
 }
