@@ -10,12 +10,13 @@ const languageTranslator = new LanguageTranslatorV3({
   serviceUrl: watson_translator_config.url,
 });
 
-router.get("/:from/:to/:text", (req, res) => {
+router.post("/:from/:to/", (req, res) => {
+  const data = req.body;
   if (req.params.from === req.params.to) {
-    res.status(200).json({ text: req.params.text });
+    res.status(200).json({ text: data.text });
   }
   const translateParams = {
-    text: req.params.text,
+    text: data.text,
     modelId: `${req.params.from}-${req.params.to}`,
   };
 

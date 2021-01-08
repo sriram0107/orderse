@@ -72,19 +72,28 @@ router.post("/:lang/:to/:by", async function (req, res) {
     try {
       const translatedTextData = await fetch(
         BASE_URL +
-          `/translate/${langcode[req.params.lang]}/${
-            langcode[req.params.to]
-          }/${txt}`,
-        { method: "GET" }
+          `/translate/${langcode[req.params.lang]}/${langcode[req.params.to]}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: txt,
+          }),
+        }
       );
       const translatedText = await translatedTextData.json();
       console.log("here", translatedText);
-      const resultData = await fetch(
-        BASE_URL + `/menu/${translatedText.text}`,
-        {
-          method: "GET",
-        }
-      );
+      const resultData = await fetch(BASE_URL + `/menu`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: translatedText.text,
+        }),
+      });
       const result = await resultData.json();
       res.status(200).json(result);
     } catch (err) {
@@ -93,16 +102,28 @@ router.post("/:lang/:to/:by", async function (req, res) {
   };
   const handleSales = async (txt) => {
     try {
-      const resultdata = await fetch(BASE_URL + `/menu/${txt}`, {
-        method: "GET",
+      const resultdata = await fetch(BASE_URL + `/menu`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: txt,
+        }),
       });
       const result = await resultdata.json();
       const translatedTextData = await fetch(
         BASE_URL +
-          `/translate/${langcode[req.params.lang]}/${
-            langcode[req.params.to]
-          }/${txt}`,
-        { method: "GET" }
+          `/translate/${langcode[req.params.lang]}/${langcode[req.params.to]}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: txt,
+          }),
+        }
       );
       const translatedText = await translatedTextData.json();
       result.text = translatedText.text;
