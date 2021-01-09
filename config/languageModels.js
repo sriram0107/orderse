@@ -6,7 +6,7 @@ const langModels = {
   French: "fr-FR_BroadbandModel",
   Chinese: "zh-CN_BroadbandModel",
   Dutch: "nl-NL_BroadbandModel",
-  German: "de-DE_BroadbandMode",
+  German: "de-DE_BroadbandModel",
   Italian: "it-IT_BroadbandModel",
 };
 
