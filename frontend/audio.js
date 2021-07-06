@@ -218,6 +218,8 @@
     })
       .then((res) => res.json())
       .then((res) => {
+        console.log("Response received");
+
         textArea.innerHTML = "";
         var text = document.createElement("p");
         text.className = "convo";
@@ -247,9 +249,8 @@
       })
       .catch(
         (err) =>
-          (document.querySelector(".translated").textContent = JSON.stringify(
-            err
-          ))
+          (document.querySelector(".translated").textContent =
+            JSON.stringify(err))
       );
   }
   micSelect.onchange = async (e) => {

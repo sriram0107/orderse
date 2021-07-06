@@ -1,3 +1,4 @@
 node_modules
 watson.js
 *.wav
+.env

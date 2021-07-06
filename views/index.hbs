@@ -7,58 +7,59 @@
 </head>
 
 <body>
+    <div class="app">
+        <div class="langselect">
+            <select class="lang" id="l1">
+                <option value="" disabled selected>Staff</option>
+                <option value="English">English</option>
+                <option value="Arabic">العربية</option>
+                <option value="Spanish">Español</option>
+                <option value="French">français</option>
+                <option value="Portuguese">Português</option>
+                <option value="German">Deutsche</option>
+                <option value="Chinese">中文</option>
+                <option value="Dutch">Dutch</option>
+                <option value="Italian">Italiano</option>
+            </select>
+            <select class="lang" id="l2">
+                <option value="" disabled selected>Customer</option>
+                <option value="English">English</option>
+                <option value="Arabic">العربية</option>
+                <option value="Spanish">Español</option>
+                <option value="French">français</option>
+                <option value="Portuguese">Português</option>
+                <option value="German">Deutsche</option>
+                <option value="Chinese">中文</option>
+                <option value="Dutch">Dutch</option>
+                <option value="Italian">Italiano</option>
+            </select>
+            <select name="" id="micSelect"></select>
+            <button class="createsession">Create Session</button>
+            <button class="endsession" disabled>End Session</button>
+            <a href="/logout"> <button class="endsession">Logout</button> </a>
+        </div>
+        <select id="visSelect">
+            <option value="circle">Circle</option>
+        </select>
+        <div class="translated"></div>
+        <div class="controls">
+            <div class="staff_audio_control">
+                <div class="audio-controls">
+                    <img src="button.png" id="record_staff" />
+                    <img src="pause.png" id="stop_staff" />
+                    <div id="msg_staff">Recording...</div>
+                </div>
+            </div>
+            <div class="customer_audio_control">
+                <div class="audio-controls">
+                    <img src="button.png" id="record_cust" />
+                    <img src="pause.png" id="stop_cust" />
+                    <div id="msg_cust">Recording...</div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <script src="audio.js"></script>
 </body>
-<div class="app">
-    <div class="langselect">
-        <select class="lang" id="l1">
-            <option value="" disabled selected>Staff</option>
-            <option value="English">English</option>
-            <option value="Arabic">العربية</option>
-            <option value="Spanish">Español</option>
-            <option value="French">français</option>
-            <option value="Portuguese">Português</option>
-            <option value="German">Deutsche</option>
-            <option value="Chinese">中文</option>
-            <option value="Dutch">Dutch</option>
-            <option value="Italian">Italiano</option>
-        </select>
-        <select class="lang" id="l2">
-            <option value="" disabled selected>Customer</option>
-            <option value="English">English</option>
-            <option value="Arabic">العربية</option>
-            <option value="Spanish">Español</option>
-            <option value="French">français</option>
-            <option value="Portuguese">Português</option>
-            <option value="German">Deutsche</option>
-            <option value="Chinese">中文</option>
-            <option value="Dutch">Dutch</option>
-            <option value="Italian">Italiano</option>
-        </select>
-        <select name="" id="micSelect"></select>
-        <button class="createsession">Create Session</button>
-        <button class="endsession" disabled>End Session</button>
-    </div>
-    <select id="visSelect">
-        <option value="circle">Circle</option>
-    </select>
-    <div class="translated"></div>
-    <div class="controls">
-        <div class="staff_audio_control">
-            <div class="audio-controls">
-                <img src="button.png" id="record_staff" />
-                <img src="pause.png" id="stop_staff" />
-                <div id="msg_staff">Recording...</div>
-            </div>
-        </div>
-        <div class="customer_audio_control">
-            <div class="audio-controls">
-                <img src="button.png" id="record_cust" />
-                <img src="pause.png" id="stop_cust" />
-                <div id="msg_cust">Recording...</div>
-            </div>
-        </div>
-    </div>
-    <div>
-        <script src="audio.js"></script>
 
 </html>
