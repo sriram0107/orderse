@@ -1,8 +1,10 @@
 const router = require("express").Router();
 const fsp = require("fs-promise");
+require('dotenv').config();
+
+const { Readable } = require('stream');
 const { IamAuthenticator } = require("ibm-watson/auth");
 const SpeechToTextV1 = require("ibm-watson/speech-to-text/v1");
-const { watson_speech_to_text_config } = require("../config/watson");
 const { langModels } = require("../config/languageModels");
 const fetch = require("node-fetch");
 const { langcode } = require("../config/languages");
@@ -11,17 +13,12 @@ const BASE_URL = process.env.BASE_URL;
 
 const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({
-    apikey: watson_speech_to_text_config.apikey,
+    apikey: process.env.WATSON_SPEECH_TO_TEXT_CONFIG_APIKEY,
   }),
-  serviceUrl: watson_speech_to_text_config.url,
+  serviceUrl: process.env.WATSON_SPEECH_TO_TEXT_CONFIG_URL,
 });
 
 router.post("/:lang/:to/:by", async function (req, res) {
-  /*
-    req.params.lang - Language received from the audio file
-    req.params.to - Language to be converted to
-    req.params.by - Can be either staff or cust 
-  */
   const buffer = req.files[0].buffer; //Extract audio file as a hexadecimal buffer
   const translationModel = langModels[req.params.lang];
   const params = {
@@ -42,10 +39,9 @@ router.post("/:lang/:to/:by", async function (req, res) {
   });
 
   try {
-    const file = await fsp.open("./uploads/audio.wav", "w");
-    await fsp.write(file, buffer, 0, buffer.length, null);
-    await fsp.close(file);
-    await fsp.createReadStream("./uploads/audio.wav").pipe(recognizeStream);
+    const dataBuffer = Buffer.from(buffer, 'hex');
+    const bufferStream = Readable.from(dataBuffer);
+    bufferStream.pipe(recognizeStream);
   } catch (err) {
     console.log("Error with reading the audio file", err);
   }

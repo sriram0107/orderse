@@ -205,14 +205,13 @@
       person === "cust"
         ? document.querySelector("#l1").value
         : document.querySelector("#l2").value;
-    console.log("params -->", lang, convert);
     var textArea = document.querySelector(".translated");
     textArea.innerHTML = "";
     var loading = document.createElement("img");
     loading.className = "loading-icon";
     loading.src = "load.gif";
     textArea.appendChild(loading);
-    fetch(`http://localhost:5000/convert/${lang}/${convert}/${person}`, {
+    fetch(`/convert/${lang}/${convert}/${person}`, {
       method: "POST",
       body: formData,
     })

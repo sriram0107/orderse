@@ -1,13 +1,13 @@
 const router = require("express").Router();
+require("dotenv").config();
 const LanguageTranslatorV3 = require("ibm-watson/language-translator/v3");
-const { watson_translator_config } = require("../config/watson");
 const { IamAuthenticator } = require("ibm-watson/auth");
 const languageTranslator = new LanguageTranslatorV3({
   version: "2018-05-01",
   authenticator: new IamAuthenticator({
-    apikey: watson_translator_config.apikey,
+    apikey: process.env.WATSON_TRANSLATOR_CONFIG_APIKEY,
   }),
-  serviceUrl: watson_translator_config.url,
+  serviceUrl: process.env.WATSON_TRANSLATOR_CONFIG_URL,
 });
 
 router.post("/:from/:to/", (req, res) => {
@@ -28,7 +28,7 @@ router.post("/:from/:to/", (req, res) => {
         .json({ text: translationResult.result.translations[0].translation });
     })
     .catch((err) => {
-      console.log("translation err", err);
+      console.log("translation error", err);
     });
 });
 
