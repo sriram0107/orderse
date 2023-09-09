@@ -9,7 +9,7 @@ const { langModels } = require("../config/languageModels");
 const fetch = require("node-fetch");
 const { langcode } = require("../config/languages");
 require("dotenv").config();
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL + process.env.PORT;
 
 const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({
