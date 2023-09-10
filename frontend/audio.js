@@ -211,7 +211,7 @@
     loading.className = "loading-icon";
     loading.src = "load.gif";
     textArea.appendChild(loading);
-    fetch(`/convert/${lang}/${convert}/${person}`, {
+    fetch(`/convert/${lang}/${convert}`, {
       method: "POST",
       body: formData,
     })
