@@ -1,22 +1,22 @@
 (async () => {
   let leftchannel = [];
   let rightchannel = [];
-  let recorder = null;
   let recording = false;
   let recordingLength = 0;
-  let volume = null;
   let audioInput = null;
   let sampleRate = null;
   let AudioContext = window.AudioContext || window.webkitAudioContext;
   let context = null;
   let analyser = null;
-  let canvas = document.querySelector("canvas");
   let micSelect = document.querySelector("#micSelect");
   let stream = null;
   let tested = false;
-  var audioControls = document.querySelectorAll(".audio-controls");
-  document.querySelector("#msg_cust").style.visible = "visibility";
-  document.querySelector("#msg_staff").style.visible = "visibility";
+  let recordingInProgress = false
+
+  let storeLanguage = ""
+  let customerLanguage = ""
+  let currentLanguage = ""
+  let targetLanguage = ""
 
   try {
     window.stream = stream = await getStream();
@@ -84,7 +84,6 @@
       // Check
       if (!recording) return;
       // Do something with the data, i.e Convert this to WAV
-      console.log("recording");
       let left = e.inputBuffer.getChannelData(0);
       let right = e.inputBuffer.getChannelData(1);
       if (!tested) {
@@ -140,11 +139,8 @@
     }
   }
 
-  function start(person) {
-    recording = true;
-    person === "cust"
-      ? (document.querySelector("#msg_cust").style.visibility = "visible")
-      : (document.querySelector("#msg_staff").style.visibility = "visible");
+  function start() {
+    recording = true
     // reset the buffers for the new recording
     leftchannel.length = rightchannel.length = 0;
     recordingLength = 0;
@@ -152,23 +148,14 @@
     if (!context) setUpRecording();
   }
 
-  async function stop(person, lang) {
-    console.log("Stop");
-    recording = false;
-    person === "cust"
-      ? (document.querySelector("#msg_cust").style.visibility = "hidden")
-      : (document.querySelector("#msg_staff").style.visibility = "hidden");
+  async function stop() {
+    recording = false
+
     // we flat the left and right channels down
     let leftBuffer = mergeBuffers(leftchannel, recordingLength);
     let rightBuffer = mergeBuffers(rightchannel, recordingLength);
     // we interleave both channels together
     let interleaved = interleave(leftBuffer, rightBuffer);
-
-    ///////////// WAV Encode /////////////////
-    // from http://typedarray.org/from-microphone-to-wav-with-getusermedia-and-web-audio/
-    //
-
-    // we create our wav file
     let buffer = new ArrayBuffer(44 + interleaved.length * 2);
     let view = new DataView(buffer);
 
@@ -201,30 +188,37 @@
     const blob = new Blob([view], { type: "audio/wav" });
     var formData = new FormData();
     formData.append("avatar", blob);
-    var convert =
-      person === "cust"
-        ? document.querySelector("#l1").value
-        : document.querySelector("#l2").value;
+
+    // UI changes
     var textArea = document.querySelector(".translated");
-    textArea.innerHTML = "";
-    var loading = document.createElement("img");
-    loading.className = "loading-icon";
-    loading.src = "load.gif";
-    textArea.appendChild(loading);
-    fetch(`/convert/${lang}/${convert}`, {
+    var loading = document.createElement("i");
+    loading.className = "fa-solid fa-ellipsis fa-beat"
+    
+    // create message ui
+    var messageContainer = document.createElement("div");  
+    if (currentLanguage == customerLanguage) {
+      messageContainer.className = "message-container-left"
+    } else {
+      messageContainer.className = "message-container-right"
+    }
+
+    var message = document.createElement("div");
+    message.className = "message"
+    message.appendChild(loading)
+
+    messageContainer.appendChild(message)
+    textArea.appendChild(messageContainer)
+
+    fetch(`/convert/${currentLanguage}/${targetLanguage}`, {
       method: "POST",
       body: formData,
     })
       .then((res) => res.json())
       .then((res) => {
-        textArea.innerHTML = "";
-        var text = document.createElement("p");
-        text.className = "convo";
-        text.textContent = res.text;
-        if (res.text === "Could not recognize your voice") {
-          text.style.color = "red";
-        }
-        textArea.appendChild(text);
+        const text = res?.text || ""
+        message.innerHTML = `<p>${text}</p>`
+
+        // create the dish UI
         var dishes = document.createElement("div");
         dishes.className = "card-container";
         res.dishes.forEach((dish) => {
@@ -242,7 +236,7 @@
           dishCard.appendChild(cost);
           dishes.appendChild(dishCard);
         });
-        textArea.appendChild(dishes);
+        message.appendChild(dishes);
       })
       .catch(
         (err) =>
@@ -251,8 +245,8 @@
           ))
       );
   }
+
   micSelect.onchange = async (e) => {
-    console.log("now use device ", micSelect.value);
     stream.getTracks().forEach(function (track) {
       track.stop();
     });
@@ -267,58 +261,46 @@
     setUpRecording();
   };
 
-  function pause() {
-    recording = false;
-    context.suspend();
+  const swapLanguages = () => {
+    var lang1 = document.querySelector("#l1").value;
+    var lang2 = document.querySelector("#l2").value;
+    document.querySelector("#l1").value = lang2
+    document.querySelector("#l2").value = lang1
+    currentLanguage = lang2
+    targetLanguage = lang1
   }
 
-  function resume() {
-    recording = true;
-    context.resume();
+  document.querySelector(".controls").onclick = (e) => {
+    if (recordingInProgress) {
+      recordingInProgress = false
+      document.querySelector("#microphone-start").style.visibility = "visible"
+      document.querySelector("#microphone-stop").style.visibility = "hidden"
+      stop()
+      swapLanguages()
+    } else {
+      recordingInProgress = true
+      document.querySelector("#microphone-start").style.visibility = "hidden"
+      document.querySelector("#microphone-stop").style.visibility = "visible"
+      start()
+    }
   }
-
-  document.querySelector("#record_cust").onclick = (e) => {
-    console.log("Start recording");
-    audioControls[0].style.visibility = "hidden";
-    document.querySelector("#record_cust").style.display = "none";
-    document.querySelector("#stop_cust").style.display = "inline";
-    start("cust");
-  };
-
-  document.querySelector("#stop_cust").onclick = (e) => {
-    var lang = document.querySelector("#l2").value;
-    stop("cust", lang);
-    audioControls[0].style.visibility = "visible";
-    document.querySelector("#stop_cust").style.display = "none";
-    document.querySelector("#record_cust").style.display = "inline";
-  };
-
-  document.querySelector("#record_staff").onclick = (e) => {
-    console.log("Start recording");
-    audioControls[1].style.visibility = "hidden";
-    document.querySelector("#record_staff").style.display = "none";
-    document.querySelector("#stop_staff").style.display = "inline";
-    start("staff");
-  };
-
-  document.querySelector("#stop_staff").onclick = (e) => {
-    var lang = document.querySelector("#l1").value;
-    stop("staff", lang);
-    audioControls[1].style.visibility = "visible";
-    document.querySelector("#stop_staff").style.display = "none";
-    document.querySelector("#record_staff").style.display = "inline";
-  };
 
   document.querySelector(".createsession").onclick = (e) => {
     var lang1 = document.querySelector("#l1").value;
     var lang2 = document.querySelector("#l2").value;
     if (lang1 !== "" && lang2 !== "") {
-      audioControls[0].style.visibility = "visible";
-      audioControls[1].style.visibility = "visible";
-      document.querySelector("#record_staff").style.display = "inline";
-      document.querySelector("#record_cust").style.display = "inline";
       document.querySelector(".endsession").disabled = false;
       document.querySelector(".createsession").disabled = true;
+
+      document.querySelector('#swapLanguages').style.visibility = "visible"
+
+      // set up languages, useful for aliging messages
+      storeLanguage = lang1
+      customerLanguage = lang2
+      currentLanguage = lang1
+      targetLanguage = lang2
+      document.querySelector(".controls").style.visibility = "visible"
+      document.querySelector("#microphone-start").style.visibility = "visible"
     } else {
       alert("Please select the languages before starting the session");
     }
@@ -328,7 +310,13 @@
     textArea.innerHTML = "";
     document.querySelector(".endsession").disabled = true;
     document.querySelector(".createsession").disabled = false;
-    audioControls[0].style.visibility = "hidden";
-    audioControls[1].style.visibility = "hidden";
+    document.querySelector('#swapLanguages').style.visibility = "hidden"
+    document.querySelector(".controls").style.visibility = "hidden"
+    document.querySelector("#microphone-start").style.visibility = "hidden"
+    document.querySelector("#microphone-stop").style.visibility = "hidden"
   };
+
+  document.querySelector('#swapLanguages').onclick = (e) => {
+    swapLanguages()
+  }
 })();

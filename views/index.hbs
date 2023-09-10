@@ -11,7 +11,7 @@
 <div class="app">
     <div class="langselect">
         <select class="lang" id="l1">
-            <option value="" disabled selected>Staff</option>
+            <option value="" disabled selected>Select Staff Language</option>
             <option value="English">English</option>
             <option value="Arabic">العربية</option>
             <option value="Spanish">Español</option>
@@ -22,8 +22,9 @@
             <option value="Dutch">Dutch</option>
             <option value="Italian">Italiano</option>
         </select>
+        <i id="swapLanguages" class="swap-icon fa-solid fa-right-left"></i>
         <select class="lang" id="l2">
-            <option value="" disabled selected>Customer</option>
+            <option value="" disabled selected>Select Customer Language</option>
             <option value="English">English</option>
             <option value="Arabic">العربية</option>
             <option value="Spanish">Español</option>
@@ -43,22 +44,13 @@
     </select>
     <div class="translated"></div>
     <div class="controls">
-        <div class="staff_audio_control">
-            <div class="audio-controls">
-                <img src="button.png" id="record_staff" />
-                <img src="pause.png" id="stop_staff" />
-                <div id="msg_staff">Recording...</div>
-            </div>
-        </div>
-        <div class="customer_audio_control">
-            <div class="audio-controls">
-                <img src="button.png" id="record_cust" />
-                <img src="pause.png" id="stop_cust" />
-                <div id="msg_cust">Recording...</div>
-            </div>
+       <div class="audio-controls">
+            <i id="microphone-start" class="fa-solid fa-microphone fa-beat fa-2xl"></i>
+            <i id="microphone-stop" class="fa-regular fa-circle-stop fa-2xl"></i>
         </div>
     </div>
     <div>
+        <script src="https://kit.fontawesome.com/b92c083c98.js" crossorigin="anonymous"></script>
     <script src="audio.js"></script>
 
 </html>

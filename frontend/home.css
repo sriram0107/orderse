@@ -2,6 +2,16 @@
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+.swap-icon {
+  visibility: hidden;
+  cursor: pointer;
 }
 
 #record {
@@ -23,6 +33,24 @@
   left: 100px;
   right: 100px;
   position: relative;
+}
+.controls {
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.controls:hover {
+  background-color: #9fa2a2;
+}
+
+#microphone-start {
+  visibility: hidden;
+  cursor: pointer;
+}
+
+#microphone-stop {
+  visibility: hidden;
+  cursor: pointer;
 }
 
 #stopRecord {
@@ -110,9 +138,49 @@ a {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: rgba(67, 73, 75, 0.938);
+  /* background-color: rgba(67, 73, 75, 0.938); */
   margin-top: 0px;
+  background-color: rgb(246 246 246 / 94%);
+  border-bottom: 1px solid gray;
 }
+
+.message {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 0.25rem;;
+  padding: 5px;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.message-container-left {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  color: white;
+}
+
+.message-container-left .message {
+  background-color: #4f4f4f;
+}
+
+
+.message-container-right {
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  color: white;
+}
+
+.message-container-right .message {
+  background-color: #3b3bd4;
+}
+
 
 .createsession {
   border: none;
@@ -145,6 +213,7 @@ a {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: scroll;
 }
 
 .controls {
@@ -152,6 +221,8 @@ a {
   height: 20vh;
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  background-color: #858989;
 }
 
 .staff_audio_control {
@@ -257,7 +328,7 @@ a {
 
 .card-container {
   margin: 10px;
-  width: 100vw;
+  width: fit-content;
   height: fit-content;
   display: flex;
   flex-direction: row;
